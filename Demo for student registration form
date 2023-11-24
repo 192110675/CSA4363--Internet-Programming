@@ -1,0 +1,228 @@
+index.jsp
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.sql.*" %>
+
+<%
+    if(request.getParameter("submit")!=null)
+    {
+      String name = request.getParameter("sname");
+      String course = request.getParameter("course");
+      int fee = Integer.parseInt(request.getParameter("fee"));
+      
+      Connection con;
+      PreparedStatement pst;
+      ResultSet rs;
+      
+      Class.forName("org.apache.derby.jdbc.ClientDriver");
+      con = DriverManager.getConnection("jdbc:derby://localhost:1527/college", "root", "root");
+      pst = con.prepareStatement("insert into student(sname, course, fee) values(?, ?, ?)");
+      pst.setString(1, name);
+      pst.setString(2, course);
+      pst.setInt(3, fee);
+      pst.executeUpdate();
+      %>
+      
+      <script>
+        alert("Record added");  
+          
+      </script>    
+   <% } 
+   %>
+    
+    
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Student Registration</title>
+    </head>
+    <body>
+    <center> <h1>Student Registration using JSP - CRUD</h1> </center>
+      
+    <div>
+            <form method="post" action="">
+                <div align="left"> 
+                    <label> Student Name </label>
+                    <input type="text" name="sname" placeholder="Student Name" id="sname" required> 
+                </div> <br/> <br/>
+                
+                 <div align="left"> 
+                    <label> Course </label>
+                    <input type="text" name="course" placeholder="Course" id="course" required>
+                </div> <br/> <br/>
+                
+                 <div align="left"> 
+                    <label> Fee </label>
+                    <input type="text" name="fee" placeholder="Fee" id="fee" required>
+                </div> <br/> <br/>
+                
+                <div align="left"> 
+                  <input type="submit" name="submit" value="Submit" id="submit">
+                   <input type="reset" name="reset" value="Reset" id="reset">
+                </div> <br/> <br/>
+                
+            </form>
+        </div>
+    <div align="center">
+        <table id="tbl-student"  border="2" width="2" cellspacing="2" cellpadding="2">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Course</th>
+                    <th>Fee</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+     <%
+      Connection con;
+      ResultSet rs;
+      
+      Class.forName("org.apache.derby.jdbc.ClientDriver");
+      con = DriverManager.getConnection("jdbc:derby://localhost:1527/college", "root", "root"); 
+      String query = "select * from student";
+      Statement st = con.createStatement();
+      rs = st.executeQuery(query);
+        while(rs.next())
+        { 
+            String id = rs.getString("sname");
+                           
+        %>   
+                
+                <tr>
+                    <td> <%=rs.getString("sname")%> </td>
+                    <td> <%=rs.getString("course")%> </td>
+                    <td> <%=rs.getString("fee")%> </td>
+                    <td> <a href="update.jsp?id=<%=id%>" </a> Edit</td>
+                    <td> <a href="delete.jsp?id=<%=id%>" </a> Delete </td>
+                </tr>
+                
+                <%
+                    }
+                %>
+                
+            </tbody>
+        </table>
+
+    </div>
+    </body>
+</html>
+
+
+update.jsp
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.sql.*" %>
+
+<%
+    if(request.getParameter("submit")!=null)
+    {
+      String id = request.getParameter("id");
+      String name = request.getParameter("sname");
+      String course = request.getParameter("course");
+      int fee = Integer.parseInt(request.getParameter("fee"));
+      
+      Connection con;
+      PreparedStatement pst;
+      ResultSet rs;
+      
+      Class.forName("org.apache.derby.jdbc.ClientDriver");
+      con = DriverManager.getConnection("jdbc:derby://localhost:1527/college", "root", "root");
+      pst = con.prepareStatement("update student set sname = ?, course = ?, fee = ? where sname ='"+id+"'");
+      pst.setString(1, name);
+      pst.setString(2, course);
+      pst.setInt(3, fee);
+      pst.executeUpdate();
+      %>
+      
+      <script>
+        alert("Record Updated");  
+          
+      </script>    
+   <% } 
+   %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h1>Student Update</h1>
+        <div>
+            <form method="post" action="">
+                <%
+                  Connection con;
+                PreparedStatement pst;
+                ResultSet rs;
+      
+      Class.forName("org.apache.derby.jdbc.ClientDriver");
+      con = DriverManager.getConnection("jdbc:derby://localhost:1527/college", "root", "root");
+      
+      String id = request.getParameter("id");
+     // out.println("<h1>id is = '"+id+"'</h1>");
+      pst = con.prepareStatement("select * from student where sname='"+id+"'");
+    //  pst.setString(1, id);
+      rs = pst.executeQuery();
+      
+    while(rs.next()) 
+    {
+          
+        %>   
+              
+                <div align="left"> 
+                    <label> Student Name </label>
+                    <input type="text" name="sname" placeholder="Student Name" value="<%=rs.getString("sname")%>" id="sname" required> 
+                </div> <br/> <br/>
+                
+                 <div align="left"> 
+                    <label> Course </label>'
+                    <input type="text" name="course" placeholder="Course" value="<%=rs.getString("course")%>" id="course" required>
+                </div> <br/> <br/>
+                
+                 <div align="left"> 
+                    <label> Fee </label>
+                    <input type="text" name="fee" placeholder="Fee" value="<%=rs.getString("fee")%>" id="fee" required>
+                </div> 
+                
+                <% } %>
+                
+                
+                <br/> <br/>
+                
+                <div align="left"> 
+                  <input type="submit" name="submit" value="Submit" id="submit">
+                   <input type="reset" name="reset" value="Reset" id="reset">
+                </div> <br/> <br/>
+                
+                <div align="center">
+                    <p><a href="index.jsp"> Click Back </a> </p>
+                </div>    
+                    
+            </form>
+        </div>
+               
+    </body>
+</html>
+
+delete.jsp
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.sql.*" %>
+
+<%
+      String id = request.getParameter("id");
+      Connection con;
+      PreparedStatement pst;
+      ResultSet rs;
+      
+      Class.forName("org.apache.derby.jdbc.ClientDriver");
+      con = DriverManager.getConnection("jdbc:derby://localhost:1527/college", "root", "root");
+      pst = con.prepareStatement("delete from student where sname ='"+id+"'");
+      pst.executeUpdate();
+      %>
+      
+      <script>
+        alert("Record Deleted");  
+         </script>    
