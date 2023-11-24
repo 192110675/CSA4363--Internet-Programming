@@ -1,0 +1,56 @@
+Index.html
+<html>
+    <head>
+        <title>User Sign-UP</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1> User Registration Sign-up Form </h1>
+        <form action="SignupServ" method="post">
+            <p> Username :  <input type="text" name="uname" /> </p> <br/>
+            <p> Password :  <input type="text" name="pw" /> </p> <br/>
+            <p>  <input type="submit" name="Sign Up" /> 
+                 <input type="reset" name="Reset" /> </p> <br/>
+        </form>
+    </body>
+</html>
+
+SignupServ.java
+package servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class SignupServ extends HttpServlet {
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        PrintWriter out = response.getWriter();
+        
+        String username = request.getParameter("uname");
+        String password = request.getParameter("pw");
+        
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+            Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/SignUp","root","root");
+            Statement stm = con.createStatement();
+             stm.executeUpdate("insert into login values('"+username+"','"+password+"')");
+             out.println("<h1> Your Account is created successfully!!! </h1>");
+             con.close();
+        } catch(Exception e)
+        {
+          out.println("Sorry! Try again later.");
+        }
+    }
+    }
+  
