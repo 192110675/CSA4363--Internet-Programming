@@ -1,0 +1,65 @@
+[25/11, 8:13 am] Kalyan Yadav: <?php
+
+$servername = "localhost";
+
+$username = "root";
+
+$password = "";
+
+$dbname="library";
+
+$conn 1 new mysqli($servername, $username, $password, $dbname); if(!$conn){
+
+die('Could not mysqli_connect_error());
+
+connect:
+
+}
+
+echo 'Connected successfully<br/>';
+
+$u=$_POST["user"];
+
+$p=$_POST["pass"];
+
+$sql = "SELECT name, password FROM user where name='{$u}' ";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+
+// output data of each row while($row = $result->fetch_assoc()) {
+
+if ($row["name"]== $row["password"]==$p) $u &&
+
+{
+
+echo "You have been successfully
+[25/11, 8:13 am] Kalyan Yadav: Validated"; successfully
+
+}
+
+else
+
+{
+
+echo "Credentials Wrong, Try again";
+
+}
+
+}
+
+}
+
+else
+
+{
+
+echo "User name given was not exist";
+
+}
+
+$conn->close();
+
+header("refresh:2; url=home.html");
+[25/11, 8:14 am] Kalyan Yadav: ? >
